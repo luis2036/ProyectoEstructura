@@ -98,8 +98,27 @@ class RedSocial:
 
 
   # Operaciones clave
-  def recomendar_amigos(self):
-    ...
+  def recomendar_amigos(grafo, usuario):
+    if usuario not in grafo.adyacencias:
+        return []  # Si el usuario no está en el grafo, no hay recomendaciones
+
+    amigos = set(grafo.adyacencias[usuario])
+    recomendados = {}
+
+    for amigo in amigos:
+        for amigo_de_amigo in grafo.adyacencias[amigo]:
+            if amigo_de_amigo != usuario and amigo_de_amigo not in amigos:
+                if amigo_de_amigo not in recomendados:
+                    recomendados[amigo_de_amigo] = 0
+                recomendados[amigo_de_amigo] += 1
+
+    # Ordenar recomendaciones por número de amigos en común (de mayor a menor)
+    recomendados_ordenados = sorted(recomendados.items(), key=lambda x: x[1], reverse=True)
+
+    # Retornar solo los IDs de los usuarios recomendados
+    return [recomendado[0] for recomendado in recomendados_ordenados]
+
+    
 
 
   def detectar_comunidades(self):
