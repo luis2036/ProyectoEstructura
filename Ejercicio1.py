@@ -50,6 +50,7 @@ red_social.cantidad_amigos(JHONATAN)
 
 # Recomendaciones de amigos
 
+red_social.recomendar_amigos(MARLON, DANIEL)
 
 # Detectar comunidades
 

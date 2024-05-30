@@ -95,7 +95,7 @@ class RedSocial:
     cant_amigos = self.grafo.cantidad_de_conexiones(nodo_usuario)
 
     print(f'{nombre_usuario} tiene {cant_amigos} amigos')
-
+ 
 
   # Operaciones clave
   def recomendar_amigos(grafo, usuario):
