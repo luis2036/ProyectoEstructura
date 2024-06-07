@@ -24,6 +24,8 @@ class AppMapa:
         self.archivo_menu.add_command(label="Agregar Ubicación", command=self.agregar_ubicacion)
         self.archivo_menu.add_command(label="Agregar Conexión", command=self.agregar_conexion)
         self.archivo_menu.add_separator()
+        self.archivo_menu.add_command(label="Encontrar Camino Más Corto", command=self.encontrar_camino_mas_corto)
+        self.archivo_menu.add_separator()
         self.archivo_menu.add_command(label="Salir", command=self.master.quit)
         self.menu_bar.add_cascade(label="Archivo", menu=self.archivo_menu)
 
@@ -39,14 +41,16 @@ class AppMapa:
 
     def dibujar_mapa(self):
         self.canvas.delete("all")
-        for arista in self.grafo.aristas:
-            x1, y1 = self.grafo.obtener_coordenadas_nodo(arista.nodo1.nombre)
-            x2, y2 = self.grafo.obtener_coordenadas_nodo(arista.nodo2.nombre)
-            self.canvas.create_line(x1, y1, x2, y2)
         for nodo in self.grafo.nodos.values():
             x, y = nodo.x, nodo.y
             self.canvas.create_oval(x-10, y-10, x+10, y+10, fill="blue")
             self.canvas.create_text(x, y, text=nodo.nombre, fill="white")
+
+        for nodo in self.grafo.nodos:
+            for vecino, peso in self.grafo.aristas[nodo]:
+                x1, y1 = self.grafo.obtener_coordenadas_nodo(nodo)
+                x2, y2 = self.grafo.obtener_coordenadas_nodo(vecino)
+                self.canvas.create_line(x1, y1, x2, y2)
 
     def agregar_ubicacion(self):
         nombre = simpledialog.askstring("Nombre de la Ubicación", "Ingrese el nombre de la ubicación:")
@@ -68,12 +72,11 @@ class AppMapa:
         inicio = simpledialog.askstring("Inicio", "Ingrese el nombre de la ubicación de inicio:")
         fin = simpledialog.askstring("Fin", "Ingrese el nombre de la ubicación de fin:")
         if inicio and fin:
-            camino = self.grafo.obtener_camino_mas_corto(inicio, fin)
-            messagebox.showinfo("Camino Más Corto", f"El camino más corto es: {camino}")
-
-    def encontrar_ruta_mas_corta(self):
-        ruta = self.grafo.obtener_ruta_mas_corta()
-        messagebox.showinfo("Ruta Más Corta", f"La ruta más corta es: {ruta}")
+            camino, distancia = self.grafo.obtener_camino_mas_corto(inicio, fin)
+            if camino:
+                messagebox.showinfo("Camino Más Corto", f"El camino más corto es: {' -> '.join(camino)} con una distancia de {distancia}")
+            else:
+                messagebox.showinfo("Camino Más Corto", "No se encontró un camino entre las ubicaciones especificadas.")
 
 def main():
     root = tk.Tk()
