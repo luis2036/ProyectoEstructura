@@ -125,8 +125,29 @@ class RedSocial:
     ...
 
 
-  def verificar_conectividad(self):
-    ...
+  def verificar_conectividad(self, nombres, grafo):
+    # Verifica si todos los nombres existen en el grafo
+    if any(nombre not in grafo.nombres_a_indices for nombre in nombres):
+        return False
+
+    # Convertir nombres a índices
+    indices = [grafo.nombres_a_indices[nombre] for nombre in nombres]
+
+    # Inicializar la lista de visitados
+    visitado = [False] * len(grafo.nombres_a_indices)
+
+    # Definir la función DFS
+    def dfs(vertice):
+        visitado[vertice] = True
+        for vecino in grafo.lista_adyacencia[vertice]:
+            if not visitado[vecino]:
+                dfs(vecino)
+
+    # Iniciar DFS desde el primer usuario en la lista
+    dfs(indices[0])
+
+    # Verificar si todos los usuarios en la lista han sido visitados
+    return all(visitado[indice] for indice in indices)
 
 
   def grado_de_conexion(self):
