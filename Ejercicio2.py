@@ -14,8 +14,6 @@ class AppMapa:
         self.canvas = tk.Canvas(master, width=800, height=600)
         self.canvas.pack()
 
-        self.dibujar_mapa()
-
     def crear_menu(self):
         self.menu_bar = tk.Menu(self.master)
 
@@ -72,8 +70,9 @@ class AppMapa:
         inicio = simpledialog.askstring("Inicio", "Ingrese el nombre de la ubicación de inicio:")
         fin = simpledialog.askstring("Fin", "Ingrese el nombre de la ubicación de fin:")
         if inicio and fin:
-            camino, distancia = self.grafo.obtener_camino_mas_corto(inicio, fin)
-            if camino:
+            resultado = self.grafo.obtener_camino_mas_corto(inicio, fin)
+            if resultado:
+                camino, distancia = resultado
                 messagebox.showinfo("Camino Más Corto", f"El camino más corto es: {' -> '.join(camino)} con una distancia de {distancia}")
             else:
                 messagebox.showinfo("Camino Más Corto", "No se encontró un camino entre las ubicaciones especificadas.")
